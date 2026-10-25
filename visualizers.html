@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="en" data-repo="GeneralDussDuss/orpheus">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Visualizers — ORPHEUS</title>
+<meta name="description" content="All five Orpheus visualizers running live in your browser — the real shaders, cycled through one at a time, reacting to the beat or to your own audio.">
+<meta name="theme-color" content="#2f5bff">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ORPHEUS">
+<meta property="og:title" content="ORPHEUS — Visualizers">
+<meta property="og:description" content="All five Orpheus visualizers running live — the real shaders, not a video.">
+<meta property="og:url" content="https://generaldussduss.github.io/orpheus-site/visualizers.html">
+<meta property="og:image" content="https://generaldussduss.github.io/orpheus-site/media/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="ORPHEUS — Visualizers">
+<meta name="twitter:description" content="All five Orpheus visualizers running live — the real shaders, not a video.">
+<meta name="twitter:image" content="https://generaldussduss.github.io/orpheus-site/media/og.png">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%23050810'/><text x='16' y='23' font-size='18' font-family='monospace' font-weight='bold' fill='%235b8cff' text-anchor='middle'>O</text></svg>">
+<link rel="stylesheet" href="assets/site.css">
+<script>
+/* Runs before first paint so the layout is already right for the device and
+   nothing has to flash its way into position. engine.js refines this later
+   with data-tier once it has profiled the GPU path. */
+(function () {
+  var h = document.documentElement, m = window.matchMedia;
+  var coarse = m && (m('(hover: none)').matches || m('(pointer: coarse)').matches);
+  var touch = coarse && ((navigator.maxTouchPoints || 0) > 0 || 'ontouchstart' in window);
+  var phone = touch && Math.min(screen.width, screen.height) <= 820;
+  if (touch) h.className += ' is-touch';
+  if (phone) h.className += ' is-phone';
+  if (m && m('(prefers-reduced-motion: reduce)').matches) h.className += ' is-calm';
+})();
+</script>
+</head>
+<body>
+<div class="prog"></div>
+<a class="skip" href="#main">Skip to content</a>
+
+<nav class="nav">
+  <a class="logo" href="index.html"><span class="logo-p">O</span><span class="logo-w">RPHEUS</span></a>
+  <button class="nav-burger" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
+  <div class="nav-links">
+    <a href="index.html#roadmap">Roadmap</a>
+    <a href="visualizers.html" aria-current="page">Visualizers</a>
+    <a href="index.html#get">Get it</a>
+    <a class="nav-gh" href="https://github.com/GeneralDussDuss/orpheus" target="_blank" rel="noopener"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>Source</a>
+  </div>
+  <button class="nav-k" aria-label="Open command palette">⌘K</button>
+</nav>
+
+<main id="main">
+
+<section class="section wrap" style="padding-top:7rem;">
+  <div class="reveal" style="margin-bottom:1.8rem;">
+    <span class="sec-label">01 // LIVE</span>
+    <h2 class="grad" data-scramble>Five Worlds, One Engine</h2>
+    <p class="prose">These are Orpheus's own fragment shaders, translated from Qt to WebGL and
+      running right here — same maths, same 32 bands, same spectrum history. Cycle through them.</p>
+  </div>
+
+  <div class="stage reveal reveal-scale">
+    <canvas id="gl" aria-label="Live Orpheus visualizer"></canvas>
+    <div class="stage-hud">
+      <div class="vtabs" role="group" aria-label="Visualizer style">
+        <button class="vtab" data-style="prism" aria-pressed="true">Prism</button>
+        <button class="vtab" data-style="skyline" aria-pressed="false">Skyline</button>
+        <button class="vtab" data-style="horizon" aria-pressed="false">Horizon</button>
+        <button class="vtab" data-style="tunnel" aria-pressed="false">Tunnel</button>
+        <button class="vtab" data-style="orb" aria-pressed="false">Orb</button>
+        <button class="vtab" id="auto" aria-pressed="true">Auto ⟳</button>
+      </div>
+      <div class="stage-note"><b id="vname">Prism</b> — <span id="vdesc">a spectrum city on a winding road</span></div>
+    </div>
+  </div>
+
+  <div class="glbar" style="margin-top:1rem;">
+    <span class="tag">Drive it ·</span>
+    <button data-bpm="89">89 BPM</button>
+    <button data-bpm="104" aria-pressed="true">104 REST</button>
+    <button data-bpm="174">174 BPM</button>
+    <button class="mic" aria-pressed="false">LIVE AUDIO</button>
+  </div>
+  <p class="prose" style="margin-top:1rem; font-size:.95rem; color:var(--faint);">
+    The pace buttons change the tempo the world travels at. <b style="color:var(--body);font-weight:500;">LIVE AUDIO</b>
+    hands the shader your microphone, so it reacts to whatever you are actually playing.</p>
+</section>
+
+<div class="divider"></div>
+
+<section class="section wrap">
+  <div class="reveal" style="margin-bottom:2rem;">
+    <span class="sec-label">02 // THE PARTS</span>
+    <h2 data-scramble>How It Works</h2>
+    <p class="prose">Nine pieces, one sentence each.</p>
+  </div>
+  <div class="parts reveal">
+    <div class="part"><span class="pn">01</span><span class="pk">orpheusd</span><p class="pv">A Python service that owns the TIDAL session, the queue and the position — so the interface can be restarted without stopping the music.</p></div>
+    <div class="part"><span class="pn">02</span><span class="pk">tidalapi</span><p class="pv">Signs in and resolves streams, at the best quality the account allows.</p></div>
+    <div class="part"><span class="pn">03</span><span class="pk">mpv</span><p class="pv">Does the decoding, driven over a JSON socket, with its own media controls switched off so it never fights for the desktop's attention.</p></div>
+    <div class="part"><span class="pn">04</span><span class="pk">cava</span><p class="pv">Turns the output into 32 bands, 30 times a second — 60 when the fullscreen stage is open.</p></div>
+    <div class="part"><span class="pn">05</span><span class="pk">Service.qml</span><p class="pv">The engine: computes spectral flux, finds the beat, and keeps every surface fed from one place.</p></div>
+    <div class="part"><span class="pn">06</span><span class="pk">The estimator</span><p class="pv">Autocorrelates six seconds of that flux once a second to work out the tempo.</p></div>
+    <div class="part"><span class="pn">07</span><span class="pk">flow</span><p class="pv">Distance, integrated on the CPU — so a tempo change bends the motion instead of teleporting the world.</p></div>
+    <div class="part"><span class="pn">08</span><span class="pk">history</span><p class="pv">A 32×40 texture holding the last second of spectrum, so Prism and Horizon can build terrain out of the past without the CPU ever seeing it.</p></div>
+    <div class="part"><span class="pn">09</span><span class="pk">Viz.qml</span><p class="pv">Packs bands, peaks, beat, flow and the live theme colours into one uniform block and hands it to the shader.</p></div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<section class="section wrap">
+  <div class="split">
+    <div class="reveal reveal-left">
+      <span class="sec-label">03 // IN THE APP</span>
+      <h2 data-scramble>Where It Actually Lives</h2>
+      <div class="prose">
+        <p class="lede">Everything above runs in a browser. This is the same engine in its real home.</p>
+        <p>The visualizer sits in the right-hand rail of the player, sized in columns and rows of
+          the desktop font rather than pixels. Every colour is a theme token read live from the
+          shell, so switching themes retextures the player and the shader in the same frame.</p>
+      </div>
+    </div>
+    <figure class="frame reveal reveal-right">
+      <video autoplay muted loop playsinline controls poster="media/player-horizon.png" preload="metadata">
+        <source src="media/player-motion.mp4" type="video/mp4">
+      </video>
+      <figcaption style="padding:0 .2rem .6rem;">Real capture: Skyline reacting live in the player's rail.</figcaption>
+    </figure>
+  </div>
+</section>
+
+</main>
+
+<footer class="foot">
+  <div class="wrap foot-row">
+    <a href="index.html#roadmap">Roadmap</a>
+    <a href="visualizers.html">Visualizers</a>
+    <a href="https://github.com/GeneralDussDuss/orpheus" target="_blank" rel="noopener">Source</a>
+    <span class="foot-copy">© 2077 ORPHEUS — UNOFFICIAL, NOT AFFILIATED WITH TIDAL. IT STREAMS; IT DOES NOT DOWNLOAD.</span>
+  </div>
+</footer>
+
+<div class="pal" role="dialog" aria-label="Command palette">
+  <div class="pal-box">
+    <input type="text" placeholder="Type a command…" aria-label="Search">
+    <ul class="pal-list">
+      <li data-key="1"><a href="index.html">Home<kbd>1</kbd></a></li>
+      <li data-key="2"><a href="visualizers.html">Visualizers<kbd>2</kbd></a></li>
+      <li data-key="3"><a href="index.html#roadmap">Roadmap<kbd>3</kbd></a></li>
+      <li data-key="4"><a href="index.html#get">Get it — install<kbd>4</kbd></a></li>
+      <li data-key="5"><a href="https://github.com/GeneralDussDuss/orpheus" target="_blank" rel="noopener">Source on GitHub<kbd>5</kbd></a></li>
+    </ul>
+    <div class="pal-hint"><span>↑↓ Navigate</span><span>⏎ Select</span><span>Esc Close</span></div>
+  </div>
+</div>
+
+<script src="assets/viz.js"></script>
+<script src="assets/engine.js"></script>
+<script>
+(function () {
+  var DESC = {
+    prism:   'a spectrum city on a winding road',
+    skyline: 'extruded columns on a mirrored floor',
+    horizon: 'ridgelines rolling out of a banded sun',
+    tunnel:  'rings of light bending with the spectrum',
+    orb:     'a lit sphere orbited by particle rings'
+  };
+  var cv = document.getElementById('gl');
+  var eng = window.OrpheusEngine.mount(cv, { style: 'prism', bpm: 104 });
+  if (!eng) return;
+
+  var tabs = Array.prototype.slice.call(document.querySelectorAll('.vtab[data-style]'));
+  var auto = document.getElementById('auto');
+  var nameEl = document.getElementById('vname'), descEl = document.getElementById('vdesc');
+  var order = ['prism', 'skyline', 'horizon', 'tunnel', 'orb'];
+  var idx = 0, timer = null;
+
+  function show(style) {
+    eng.setStyle(style);
+    idx = order.indexOf(style);
+    tabs.forEach(function (t) { t.setAttribute('aria-pressed', t.getAttribute('data-style') === style ? 'true' : 'false'); });
+    nameEl.textContent = style.charAt(0).toUpperCase() + style.slice(1);
+    descEl.textContent = DESC[style];
+  }
+  function startAuto() {
+    auto.setAttribute('aria-pressed', 'true');
+    clearInterval(timer);
+    timer = setInterval(function () { show(order[(idx + 1) % order.length]); }, 9000);
+  }
+  function stopAuto() { auto.setAttribute('aria-pressed', 'false'); clearInterval(timer); timer = null; }
+
+  tabs.forEach(function (t) {
+    t.addEventListener('click', function () { stopAuto(); show(t.getAttribute('data-style')); });
+  });
+  auto.addEventListener('click', function () { timer ? stopAuto() : startAuto(); });
+
+  var bar = document.querySelector('.glbar');
+  Array.prototype.forEach.call(bar.querySelectorAll('[data-bpm]'), function (b) {
+    b.addEventListener('click', function () {
+      Array.prototype.forEach.call(bar.querySelectorAll('[data-bpm]'), function (o) { o.setAttribute('aria-pressed', 'false'); });
+      b.setAttribute('aria-pressed', 'true');
+      eng.setBpm(parseFloat(b.getAttribute('data-bpm')));
+    });
+  });
+  var mic = bar.querySelector('.mic');
+  mic.addEventListener('click', function () {
+    eng.toggleMic(function (on, label) { mic.setAttribute('aria-pressed', on ? 'true' : 'false'); mic.textContent = label; });
+  });
+
+  show('prism');
+  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) startAuto(); else stopAuto();
+})();
+</script>
+<script src="assets/site.js"></script>
+</body>
+</html>

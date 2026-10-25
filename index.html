@@ -1,0 +1,361 @@
+<!doctype html>
+<html lang="en" data-repo="GeneralDussDuss/orpheus">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ORPHEUS — a hi-res TIDAL player that thinks it's a terminal</title>
+<meta name="description" content="GPU music visualizers that travel at the pace of the track. A hi-res TIDAL player built for Omarchy and Hyprland — QML, GLSL and Python.">
+<meta name="theme-color" content="#2f5bff">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ORPHEUS">
+<meta property="og:title" content="ORPHEUS">
+<meta property="og:description" content="A hi-res TIDAL player that thinks it's a terminal. The visualizers don't react to loudness — they travel at the pace of the track.">
+<meta property="og:url" content="https://generaldussduss.github.io/orpheus-site/">
+<meta property="og:image" content="https://generaldussduss.github.io/orpheus-site/media/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="ORPHEUS">
+<meta name="twitter:description" content="GPU music visualizers that travel at the pace of the track.">
+<meta name="twitter:image" content="https://generaldussduss.github.io/orpheus-site/media/og.png">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%23050810'/><text x='16' y='23' font-size='18' font-family='monospace' font-weight='bold' fill='%235b8cff' text-anchor='middle'>O</text></svg>">
+<link rel="canonical" href="https://generaldussduss.github.io/orpheus-site/">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Orpheus",
+"applicationCategory":"MultimediaApplication","operatingSystem":"Linux (Omarchy, Hyprland)",
+"description":"A hi-res TIDAL player that thinks it's a terminal, with GPU visualizers that travel at the pace of the track.",
+"url":"https://generaldussduss.github.io/orpheus-site/",
+"codeRepository":"https://github.com/GeneralDussDuss/orpheus","license":"https://www.gnu.org/licenses/gpl-3.0.html",
+"programmingLanguage":["QML","GLSL","Python"],
+"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
+</script>
+<link rel="stylesheet" href="assets/site.css">
+<script>
+/* Runs before first paint so the layout is already right for the device and
+   nothing has to flash its way into position. engine.js refines this later
+   with data-tier once it has profiled the GPU path. */
+(function () {
+  var h = document.documentElement, m = window.matchMedia;
+  var coarse = m && (m('(hover: none)').matches || m('(pointer: coarse)').matches);
+  var touch = coarse && ((navigator.maxTouchPoints || 0) > 0 || 'ontouchstart' in window);
+  var phone = touch && Math.min(screen.width, screen.height) <= 820;
+  if (touch) h.className += ' is-touch';
+  if (phone) h.className += ' is-phone';
+  if (m && m('(prefers-reduced-motion: reduce)').matches) h.className += ' is-calm';
+})();
+</script>
+</head>
+<body>
+<div class="prog"></div>
+<a class="skip" href="#main">Skip to content</a>
+
+<nav class="nav">
+  <a class="logo" href="index.html"><span class="logo-p">O</span><span class="logo-w">RPHEUS</span></a>
+  <button class="nav-burger" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
+  <div class="nav-links">
+    <a href="index.html#roadmap">Roadmap</a>
+    <a href="visualizers.html">Visualizers</a>
+    <a href="index.html#get">Get it</a>
+    <a class="nav-gh" href="https://github.com/GeneralDussDuss/orpheus" target="_blank" rel="noopener"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>Source</a>
+  </div>
+  <button class="nav-k" aria-label="Open command palette">⌘K</button>
+</nav>
+
+<main id="main">
+
+<section class="hero">
+  <canvas id="gl" aria-hidden="true"></canvas>
+  <div class="hero-veil"></div>
+  <div class="wrap hero-in">
+    <span class="badge"><i></i>Version 0.1 — part of the suite</span>
+    <h1 data-letters>ORPHEUS</h1>
+    <p class="typed" data-type="The world comes at you at the pace of the track."></p>
+    <p class="rot" data-rot='["// THIS IS PRISM, THE REAL SHADER, RUNNING NOW","// 32-BAND SPECTRUM AT 50 HZ","// 32x40 SPECTRUM HISTORY ON THE GPU","// A TUI ON THE OUTSIDE, A SHADER ON THE INSIDE"]'></p>
+    <p class="hero-sub">A hi-res TIDAL player with no title bar, no rounded cards and no popout
+      menus — box-drawing characters, braille spectrum glyphs, and a fragment shader running in
+      the right half of the window.</p>
+    <div class="hero-cta">
+      <a class="btn btn-primary" href="visualizers.html">Try all five visualizers</a>
+      <a class="btn btn-star" href="https://github.com/GeneralDussDuss/orpheus" target="_blank" rel="noopener">
+        <span class="star-ico">★</span>Star it on GitHub<span class="star-n" data-stars>—</span></a>
+    </div>
+    <div class="glbar">
+      <span class="tag">Prism · live ·</span>
+      <button data-bpm="89">89 BPM</button>
+      <button data-bpm="104" aria-pressed="true">104 REST</button>
+      <button data-bpm="174">174 BPM</button>
+      <button class="mic" aria-pressed="false">LIVE AUDIO</button>
+    </div>
+  </div>
+  <div class="scroll-cue" aria-hidden="true">▼</div>
+</section>
+
+<div class="divider"></div>
+
+<section class="section wrap">
+  <div class="split split-wide">
+    <div class="reveal reveal-left">
+      <span class="sec-label">01 // THE PLAYER</span>
+      <h2 data-scramble>A TUI on the Outside</h2>
+      <div class="prose">
+        <p class="lede">That is not a video and not a CSS trick. It is Prism — Orpheus's own
+          fragment shader, compiled to WebGL and running in your browser.</p>
+        <p>Change the pace and watch what happens. The bars do not just get taller; the world
+          arrives sooner. A faster track moves the camera further every second.</p>
+        <p>Orpheus streams hi-res from TIDAL and hands 32 bands of live spectrum to a shader
+          sitting inside the same window. The player, the stage, the desktop widget and the bar
+          spectrum are one engine at four sizes — four surfaces, and nothing that springs out of
+          a control.</p>
+      </div>
+    </div>
+    <figure class="frame reveal reveal-right">
+      <video autoplay muted loop playsinline controls poster="media/player-prism.png" preload="metadata">
+        <source src="media/player-motion.mp4" type="video/mp4">
+        <img src="media/player-motion.gif" alt="The Orpheus player window with a live visualizer in its rail.">
+      </video>
+    </figure>
+  </div>
+</section>
+
+<section class="section wrap">
+  <div class="stats reveal" data-stagger="100">
+    <div class="stat"><b data-count="2594">0</b><span>Lines of QML</span></div>
+    <div class="stat"><b data-count="604">0</b><span>Lines of GLSL</span></div>
+    <div class="stat"><b data-count="1385">0</b><span>Lines of Python</span></div>
+    <div class="stat"><b data-count="7">0</b><span>Fragment shaders</span></div>
+    <div class="stat"><b data-count="29">0</b><span>Themes supported</span></div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<section class="section wrap">
+  <div class="reveal" style="text-align:center; margin-bottom:2.4rem;">
+    <span class="sec-label" style="justify-content:center;">02 // THE ARSENAL</span>
+    <h2 class="grad" data-scramble>Five Worlds, One Engine</h2>
+    <p class="prose" style="margin-inline:auto;">Every style reads the same 32 bands and the same
+      travel distance. What changes is the world they build out of it — and all five run live on
+      the next page.</p>
+  </div>
+  <div class="grid grid-3 reveal" data-stagger="90">
+    <article class="card" data-tilt="8"><span class="ico">◢</span><h3>Prism</h3><p>A spectrum city on a winding road, seen three-quarter on, camera banking into the curve.</p></article>
+    <article class="card" data-tilt="8"><span class="ico">▚</span><h3>Skyline</h3><p>Extruded columns on a mirrored floor, peak caps floating down, the grid flashing on every kick.</p></article>
+    <article class="card" data-tilt="8"><span class="ico">◐</span><h3>Horizon</h3><p>Glowing ridgelines rolling out of a banded sun — each ridge a past moment of sound.</p></article>
+    <article class="card" data-tilt="8"><span class="ico">◉</span><h3>Tunnel</h3><p>Flying through rings of light that bend with the spectrum, warp streaks racing past.</p></article>
+    <article class="card" data-tilt="8"><span class="ico">⬤</span><h3>Orb</h3><p>A lit sphere pushed out by the spectrum, orbited by tilted rings carrying particles.</p></article>
+    <article class="card" data-tilt="8"><span class="ico">⎍</span><h3>Mini</h3><p>The same spectrum at bar size, for the status bar and the mini-player.</p></article>
+  </div>
+  <p style="margin-top:1.8rem; text-align:center;"><a class="btn btn-primary" href="visualizers.html">Run them live</a></p>
+</section>
+
+<div class="divider"></div>
+
+<section class="section wrap" id="roadmap">
+  <div class="reveal">
+    <span class="sec-label">03 // ROADMAP</span>
+    <h2 data-scramble>Where This Is Going</h2>
+    <p class="prose">Orpheus has been built in the open on one machine for two weeks. Here is
+      what already works, what is on the bench right now, and what is queued behind it.</p>
+    <div class="road">
+
+      <div class="road-row reveal" data-state="done">
+        <div class="road-head">
+          <span class="pill pill-done">Shipped</span>
+          <h3>The player</h3>
+          <span class="road-when">v0.1</span>
+        </div>
+        <p>Hi-res TIDAL streaming through mpv, MPRIS so the rest of the desktop can see the
+          track, favourites everywhere, and a queue that survives a service restart.</p>
+      </div>
+
+      <div class="road-row reveal" data-state="done">
+        <div class="road-head">
+          <span class="pill pill-done">Shipped</span>
+          <h3>One engine, four surfaces</h3>
+          <span class="road-when">v0.1</span>
+        </div>
+        <p>Seven fragment shaders behind five visual styles, feeding the player rail, the
+          fullscreen stage, the desktop widget and a bar spectrum — with no popout menus and
+          nothing that springs out of a control.</p>
+      </div>
+
+      <div class="road-row reveal" data-state="done">
+        <div class="road-head">
+          <span class="pill pill-done">Shipped</span>
+          <h3>Pace, not loudness</h3>
+          <span class="road-when">v0.1</span>
+        </div>
+        <p>The world travels at the tempo of the track instead of flinching at its volume.
+          Tempo comes from autocorrelating the spectral-flux envelope, and the shaders read an
+          integrated travel distance rather than the clock.</p>
+      </div>
+
+      <div class="road-row reveal" data-state="now">
+        <div class="road-head">
+          <span class="pill pill-now">In progress</span>
+          <h3>Source release</h3>
+          <span class="road-when">Now</span>
+        </div>
+        <p>GPL-3.0-or-later, the whole thing: the Python daemon, the QML plugin and every
+          shader. Quickshell and tidalapi are already LGPL-3, so it sits on the stack without
+          friction.</p>
+      </div>
+
+      <div class="road-row reveal" data-state="now">
+        <div class="road-head">
+          <span class="pill pill-now">In progress</span>
+          <h3>An install path a stranger can follow</h3>
+          <span class="road-when">Next release</span>
+        </div>
+        <p>Right now installing means knowing where the daemon, the user unit, the plugin
+          symlink and the shader build each go. That becomes one documented sequence, then one
+          command.</p>
+      </div>
+
+      <div class="road-row reveal" data-state="next">
+        <div class="road-head">
+          <span class="pill pill-next">Queued</span>
+          <h3>The stage, finished</h3>
+          <span class="road-when">Soon</span>
+        </div>
+        <p>The player window got the full TUI treatment; the fullscreen stage and the
+          mini-player have not. Same box-drawing chrome, same restraint — and fresh captures
+          at the quality the shaders actually deserve.</p>
+      </div>
+
+      <div class="road-row reveal" data-state="next">
+        <div class="road-head">
+          <span class="pill pill-next">Queued</span>
+          <h3>Runs on a machine that isn't mine</h3>
+          <span class="road-when">Soon</span>
+        </div>
+        <p>Multi-monitor placement, theme coverage beyond the 29 already handled, and the
+          rough edges that only show up on hardware I do not own. Issues welcome once the
+          source is up.</p>
+      </div>
+
+      <div class="road-row reveal" data-state="next">
+        <div class="road-head">
+          <span class="pill pill-next">Not planned</span>
+          <h3>Other providers</h3>
+          <span class="road-when">—</span>
+        </div>
+        <p>TIDAL stays the only backend, deliberately. Spotify cannot legally stream to a
+          third-party client at all, and carrying a provider abstraction for one provider
+          costs more than it returns.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<section class="section wrap" id="get">
+  <div class="split split-wide">
+    <div class="reveal reveal-left">
+      <span class="sec-label">04 // GET IT</span>
+      <h2 data-scramble>Run It Yourself</h2>
+      <div class="prose">
+        <p class="lede">Orpheus is a Quickshell plugin plus a small Python daemon. There is no
+          installer yet — that is the next thing on the list — but the path is short.</p>
+        <p>You need a TIDAL subscription for playback; the hi-res tier needs the PKCE sign-in,
+          which the player walks you through. Nothing is downloaded and nothing is decrypted:
+          it streams, the same as the official client.</p>
+      </div>
+      <div class="req">
+        <span>Omarchy / Hyprland</span><span>Quickshell</span><span>Python 3.13+</span>
+        <span>mpv</span><span>uv</span><span>TIDAL account</span>
+      </div>
+      <div class="tier-note">This page profiled your device as <b data-tier-readout>…</b> and
+        picked its render resolution to match.</div>
+    </div>
+    <div class="reveal reveal-right">
+      <div class="shell">
+        <div class="shell-bar">
+          <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+          <span class="shell-name">bash</span>
+          <button class="shell-copy" data-copy="#install-cmd">Copy</button>
+        </div>
+        <pre id="install-cmd"><span class="c"># the daemon and its unit</span>
+<span class="p">$</span> git clone https://github.com/GeneralDussDuss/orpheus
+<span class="p">$</span> cd orpheus &amp;&amp; uv sync
+<span class="p">$</span> cp orpheusd.service ~/.config/systemd/user/
+<span class="p">$</span> systemctl --user enable --now orpheusd
+
+<span class="c"># the shell plugin</span>
+<span class="p">$</span> ln -s "$PWD" ~/.config/omarchy/plugins/orpheus
+<span class="p">$</span> omarchy restart shell
+
+<span class="c"># Super+Shift+M opens the player</span></pre>
+      </div>
+      <p style="margin-top:1.1rem;"><a class="btn btn-secondary" href="https://github.com/GeneralDussDuss/orpheus#installation" target="_blank" rel="noopener">Full instructions in the README</a></p>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<section class="cta-band">
+  <div class="wrap reveal">
+    <span class="sec-label" style="justify-content:center;">05 // THE ASK</span>
+    <h2 class="grad" data-scramble>If You Like It, Star It</h2>
+    <p class="prose">Orpheus is one person's plugin for one window manager. A star is how I find
+      out anyone else is running it — and it is what decides whether the install path gets built
+      for strangers or stays a note to myself.</p>
+    <div class="cta-row">
+      <a class="btn btn-primary" href="https://github.com/GeneralDussDuss/orpheus" target="_blank" rel="noopener">
+        <span class="star-ico">★</span>Star us now<span class="star-n" data-stars>—</span></a>
+      <a class="btn btn-secondary" href="https://github.com/GeneralDussDuss/orpheus/issues" target="_blank" rel="noopener">Report an issue</a>
+      <a class="btn btn-secondary" href="visualizers.html">See the visualizers</a>
+    </div>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="wrap foot-row">
+    <a href="index.html#roadmap">Roadmap</a>
+    <a href="visualizers.html">Visualizers</a>
+    <a href="https://github.com/GeneralDussDuss/orpheus" target="_blank" rel="noopener">Source</a>
+    <span class="foot-copy">© 2077 ORPHEUS — UNOFFICIAL, NOT AFFILIATED WITH TIDAL. IT STREAMS; IT DOES NOT DOWNLOAD.</span>
+  </div>
+</footer>
+
+<div class="pal" role="dialog" aria-label="Command palette">
+  <div class="pal-box">
+    <input type="text" placeholder="Type a command…" aria-label="Search">
+    <ul class="pal-list">
+      <li data-key="1"><a href="index.html">Home<kbd>1</kbd></a></li>
+      <li data-key="2"><a href="visualizers.html">Visualizers<kbd>2</kbd></a></li>
+      <li data-key="3"><a href="index.html#roadmap">Roadmap<kbd>3</kbd></a></li>
+      <li data-key="4"><a href="index.html#get">Get it — install<kbd>4</kbd></a></li>
+      <li data-key="5"><a href="https://github.com/GeneralDussDuss/orpheus" target="_blank" rel="noopener">Source on GitHub<kbd>5</kbd></a></li>
+    </ul>
+    <div class="pal-hint"><span>↑↓ Navigate</span><span>⏎ Select</span><span>Esc Close</span></div>
+  </div>
+</div>
+
+<script src="assets/viz.js"></script>
+<script src="assets/engine.js"></script>
+<script>
+(function () {
+  var cv = document.getElementById('gl');
+  var eng = window.OrpheusEngine.mount(cv, { style: 'prism', bpm: 104 });
+  if (!eng) return;
+  var bar = document.querySelector('.glbar');
+  Array.prototype.forEach.call(bar.querySelectorAll('[data-bpm]'), function (b) {
+    b.addEventListener('click', function () {
+      Array.prototype.forEach.call(bar.querySelectorAll('[data-bpm]'), function (o) { o.setAttribute('aria-pressed', 'false'); });
+      b.setAttribute('aria-pressed', 'true');
+      eng.setBpm(parseFloat(b.getAttribute('data-bpm')));
+    });
+  });
+  var mic = bar.querySelector('.mic');
+  mic.addEventListener('click', function () {
+    eng.toggleMic(function (on, label) { mic.setAttribute('aria-pressed', on ? 'true' : 'false'); mic.textContent = label; });
+  });
+})();
+</script>
+<script src="assets/site.js"></script>
+</body>
+</html>

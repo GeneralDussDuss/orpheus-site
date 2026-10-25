@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://generaldussduss.github.io/orpheus-site/sitemap.xml
