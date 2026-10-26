@@ -53,6 +53,7 @@
   <a class="logo" href="index.html"><span class="logo-p">O</span><span class="logo-w">RPHEUS</span></a>
   <button class="nav-burger" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
   <div class="nav-links">
+    <a href="index.html#video">Video</a>
     <a href="index.html#roadmap">Roadmap</a>
     <a href="visualizers.html">Visualizers</a>
     <a href="index.html#get">Get it</a>
@@ -119,9 +120,9 @@
 
 <section class="section wrap">
   <div class="stats reveal" data-stagger="100">
-    <div class="stat"><b data-count="2594">0</b><span>Lines of QML</span></div>
+    <div class="stat"><b data-count="4109">0</b><span>Lines of QML</span></div>
     <div class="stat"><b data-count="604">0</b><span>Lines of GLSL</span></div>
-    <div class="stat"><b data-count="1385">0</b><span>Lines of Python</span></div>
+    <div class="stat"><b data-count="2854">0</b><span>Lines of Python</span></div>
     <div class="stat"><b data-count="7">0</b><span>Fragment shaders</span></div>
     <div class="stat"><b data-count="29">0</b><span>Themes supported</span></div>
   </div>
@@ -150,9 +151,49 @@
 
 <div class="divider"></div>
 
+<section class="section wrap" id="video">
+  <div class="reveal" style="text-align:center; margin-bottom:2.4rem;">
+    <span class="sec-label" style="justify-content:center;">03 // THE VIDEO SECTION</span>
+    <h2 class="grad" data-scramble>Whichever Service Answers</h2>
+    <p class="prose" style="margin-inline:auto;">One page, more than one source behind it. Tab
+      picks which service answers; a row knows how to play itself. Nothing in the page learns
+      the difference — and none of it needs a TIDAL session, because none of it is TIDAL's.</p>
+  </div>
+  <figure class="frame reveal">
+    <img src="media/video-youtube.png" width="1800" height="742" loading="lazy"
+         alt="The Orpheus video page: a provider strip, a search prompt, and rows of YouTube results with channel, views, age and duration.">
+  </figure>
+  <div class="grid grid-3 reveal" data-stagger="90" style="margin-top:2rem;">
+    <article class="card" data-tilt="8"><span class="ico">▶</span><h3>Watch it</h3><p>The library is the remote; a second mpv is the screen. Enter opens it, and the transport strip drives it without leaving the page.</p></article>
+    <article class="card" data-tilt="8"><span class="ico">∿</span><h3>Listen to it</h3><p>Press <b>a</b> and a YouTube result goes through the music player instead — arriving with the queue, the equaliser and the visualiser already attached.</p></article>
+    <article class="card" data-tilt="8"><span class="ico">❖</span><h3>Or hand it over</h3><p>Curd has to own its own player to track AniList and skip the opening, so Orpheus opens it with an Orpheus-shaped window and gets out of the way.</p></article>
+  </div>
+  <div class="split split-wide" style="margin-top:3rem;">
+    <div class="reveal reveal-left">
+      <h3 style="margin-bottom:1rem;">Anime, without reimplementing anyone</h3>
+      <div class="prose">
+        <p>ani-cli already knows how to find a series, list its episodes and turn one into a
+          playable stream — and it tracks the scrapers as they break. Rewriting that would mean
+          signing up to maintain it.</p>
+        <p>So Orpheus drives it instead. It has no machine-readable mode, so both answers come
+          out through hooks it already has: a menu program that copies the candidate list and
+          chooses nothing, and a player named <code>orpheus-mpv-ani</code> — because ani-cli
+          hands anything matching <code>*mpv*</code> the referrer and the subtitle track along
+          with the URL, which is exactly the part worth having.</p>
+      </div>
+    </div>
+    <figure class="frame reveal reveal-right">
+      <img src="media/video-anime.png" width="1800" height="742" loading="lazy"
+           alt="The same page with the anime provider selected, listing four matching series.">
+    </figure>
+  </div>
+</section>
+
+<div class="divider"></div>
+
 <section class="section wrap" id="roadmap">
   <div class="reveal">
-    <span class="sec-label">03 // ROADMAP</span>
+    <span class="sec-label">04 // ROADMAP</span>
     <h2 data-scramble>Where This Is Going</h2>
     <p class="prose">Orpheus has been built in the open on one machine for two weeks. Here is
       what already works, what is on the bench right now, and what is queued behind it.</p>
@@ -234,15 +275,26 @@
           source is up.</p>
       </div>
 
+      <div class="road-row reveal" data-state="done">
+        <div class="road-head">
+          <span class="pill pill-done">Shipped</span>
+          <h3>More than one source</h3>
+          <span class="road-when">v0.2</span>
+        </div>
+        <p>YouTube arrives as a second provider rather than a second app — by the time it
+          reaches the player it is a URL, so the queue, the equaliser and the visualiser carry
+          on unchanged. The video section adds a screen to the remote, and anime through
+          ani-cli behind the same rows.</p>
+      </div>
+
       <div class="road-row reveal" data-state="next">
         <div class="road-head">
           <span class="pill pill-next">Not planned</span>
-          <h3>Other providers</h3>
+          <h3>Spotify</h3>
           <span class="road-when">—</span>
         </div>
-        <p>TIDAL stays the only backend, deliberately. Spotify cannot legally stream to a
-          third-party client at all, and carrying a provider abstraction for one provider
-          costs more than it returns.</p>
+        <p>It cannot legally stream to a third-party client at all. No amount of wanting it
+          changes that, so it is not on the list.</p>
       </div>
 
     </div>
@@ -254,7 +306,7 @@
 <section class="section wrap" id="get">
   <div class="split split-wide">
     <div class="reveal reveal-left">
-      <span class="sec-label">04 // GET IT</span>
+      <span class="sec-label">05 // GET IT</span>
       <h2 data-scramble>Run It Yourself</h2>
       <div class="prose">
         <p class="lede">Orpheus is a Quickshell plugin plus a small Python daemon. There is no
@@ -298,7 +350,7 @@
 
 <section class="cta-band">
   <div class="wrap reveal">
-    <span class="sec-label" style="justify-content:center;">05 // THE ASK</span>
+    <span class="sec-label" style="justify-content:center;">06 // THE ASK</span>
     <h2 class="grad" data-scramble>If You Like It, Star It</h2>
     <p class="prose">Orpheus is one person's plugin for one window manager. A star is how I find
       out anyone else is running it — and it is what decides whether the install path gets built
@@ -327,9 +379,10 @@
     <ul class="pal-list">
       <li data-key="1"><a href="index.html">Home<kbd>1</kbd></a></li>
       <li data-key="2"><a href="visualizers.html">Visualizers<kbd>2</kbd></a></li>
-      <li data-key="3"><a href="index.html#roadmap">Roadmap<kbd>3</kbd></a></li>
-      <li data-key="4"><a href="index.html#get">Get it — install<kbd>4</kbd></a></li>
-      <li data-key="5"><a href="https://github.com/GeneralDussDuss/orpheus" target="_blank" rel="noopener">Source on GitHub<kbd>5</kbd></a></li>
+      <li data-key="3"><a href="index.html#video">Video section<kbd>3</kbd></a></li>
+      <li data-key="4"><a href="index.html#roadmap">Roadmap<kbd>4</kbd></a></li>
+      <li data-key="5"><a href="index.html#get">Get it — install<kbd>5</kbd></a></li>
+      <li data-key="6"><a href="https://github.com/GeneralDussDuss/orpheus" target="_blank" rel="noopener">Source on GitHub<kbd>6</kbd></a></li>
     </ul>
     <div class="pal-hint"><span>↑↓ Navigate</span><span>⏎ Select</span><span>Esc Close</span></div>
   </div>
