@@ -275,7 +275,8 @@
     btn.addEventListener('click', function () {
       var src = $(btn.getAttribute('data-copy'));
       if (!src) return;
-      var txt = src.innerText.replace(/^\s*\$\s?/gm, '').trim();
+      // only the commands: comments are there to read, not to paste
+      var txt = src.innerText.replace(/^\s*#.*$/gm, '').replace(/^\s*\$\s?/gm, '').trim();
       var done = function () {
         var was = btn.textContent;
         btn.textContent = 'COPIED';

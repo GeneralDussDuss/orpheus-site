@@ -155,9 +155,9 @@
   <div class="reveal" style="text-align:center; margin-bottom:2.4rem;">
     <span class="sec-label" style="justify-content:center;">03 // THE VIDEO SECTION</span>
     <h2 class="grad" data-scramble>Whichever Service Answers</h2>
-    <p class="prose" style="margin-inline:auto;">One page, more than one source behind it. Tab
-      picks which service answers; a row knows how to play itself. Nothing in the page learns
-      the difference — and none of it needs a TIDAL session, because none of it is TIDAL's.</p>
+    <p class="prose" style="margin-inline:auto;">One page, three sources behind it — YouTube,
+      SoundCloud and anime. Tab picks which service answers; a row knows how to play itself.
+      None of it needs a TIDAL session, because none of it is TIDAL's.</p>
   </div>
   <figure class="frame reveal">
     <img src="media/video-youtube.png" width="1800" height="742" loading="lazy"
@@ -165,21 +165,18 @@
   </figure>
   <div class="grid grid-3 reveal" data-stagger="90" style="margin-top:2rem;">
     <article class="card" data-tilt="8"><span class="ico">▶</span><h3>Watch it</h3><p>The library is the remote; a second mpv is the screen. Enter opens it, and the transport strip drives it without leaving the page.</p></article>
-    <article class="card" data-tilt="8"><span class="ico">∿</span><h3>Listen to it</h3><p>Press <b>a</b> and a YouTube result goes through the music player instead — arriving with the queue, the equaliser and the visualiser already attached.</p></article>
+    <article class="card" data-tilt="8"><span class="ico">∿</span><h3>Listen to it</h3><p>Press <b>a</b> on a YouTube result, or Enter on a SoundCloud one, and it goes through the music player instead — arriving with the queue, the equaliser and the visualiser already attached.</p></article>
     <article class="card" data-tilt="8"><span class="ico">❖</span><h3>Or hand it over</h3><p>Curd has to own its own player to track AniList and skip the opening, so Orpheus opens it with an Orpheus-shaped window and gets out of the way.</p></article>
   </div>
   <div class="split split-wide" style="margin-top:3rem;">
     <div class="reveal reveal-left">
       <h3 style="margin-bottom:1rem;">Anime, without reimplementing anyone</h3>
       <div class="prose">
-        <p>ani-cli already knows how to find a series, list its episodes and turn one into a
-          playable stream — and it tracks the scrapers as they break. Rewriting that would mean
-          signing up to maintain it.</p>
-        <p>So Orpheus drives it instead. It has no machine-readable mode, so both answers come
-          out through hooks it already has: a menu program that copies the candidate list and
-          chooses nothing, and a player named <code>orpheus-mpv-ani</code> — because ani-cli
-          hands anything matching <code>*mpv*</code> the referrer and the subtitle track along
-          with the URL, which is exactly the part worth having.</p>
+        <p>ani-cli and Curd already know how to find a series and turn an episode into a stream,
+          and their maintainers chase the sources every time one breaks. Orpheus drives them
+          rather than forking them, so when they fix something, Orpheus is fixed too.</p>
+        <p>The flip side: anime works when they do. Sources come and go, and while one is down
+          the page says so instead of pretending.</p>
       </div>
     </div>
     <figure class="frame reveal reveal-right">
@@ -195,8 +192,8 @@
   <div class="reveal">
     <span class="sec-label">04 // ROADMAP</span>
     <h2 data-scramble>Where This Is Going</h2>
-    <p class="prose">Orpheus has been built in the open on one machine for two weeks. Here is
-      what already works, what is on the bench right now, and what is queued behind it.</p>
+    <p class="prose">Built in the open, on one machine so far. What works, what is on the bench,
+      and what will not happen.</p>
     <div class="road">
 
       <div class="road-row reveal" data-state="done">
@@ -206,7 +203,8 @@
           <span class="road-when">v0.1</span>
         </div>
         <p>Hi-res TIDAL streaming through mpv, MPRIS so the rest of the desktop can see the
-          track, favourites everywhere, and a queue that survives a service restart.</p>
+          track, favourites everywhere, a queue that survives a restart — plus word-level lyrics
+          and a key that copies a link to whatever is playing.</p>
       </div>
 
       <div class="road-row reveal" data-state="done">
@@ -231,60 +229,49 @@
           integrated travel distance rather than the clock.</p>
       </div>
 
-      <div class="road-row reveal" data-state="now">
+      <div class="road-row reveal" data-state="done">
         <div class="road-head">
-          <span class="pill pill-now">In progress</span>
+          <span class="pill pill-done">Shipped</span>
+          <h3>More than one source</h3>
+          <span class="road-when">v0.1</span>
+        </div>
+        <p>YouTube and SoundCloud arrive as providers rather than separate apps — by the time
+          they reach the player they are a URL, so the queue, the equaliser and the visualiser
+          carry on unchanged. The video section adds a screen to the remote, and anime behind
+          the same rows.</p>
+      </div>
+
+      <div class="road-row reveal" data-state="done">
+        <div class="road-head">
+          <span class="pill pill-done">Shipped</span>
           <h3>Source release</h3>
-          <span class="road-when">Now</span>
+          <span class="road-when">v0.1</span>
         </div>
         <p>GPL-3.0-or-later, the whole thing: the Python daemon, the QML plugin and every
           shader. Quickshell and tidalapi are already LGPL-3, so it sits on the stack without
           friction.</p>
       </div>
 
-      <div class="road-row reveal" data-state="now">
-        <div class="road-head">
-          <span class="pill pill-now">In progress</span>
-          <h3>An install path a stranger can follow</h3>
-          <span class="road-when">Next release</span>
-        </div>
-        <p>Right now installing means knowing where the daemon, the user unit, the plugin
-          symlink and the shader build each go. That becomes one documented sequence, then one
-          command.</p>
-      </div>
-
-      <div class="road-row reveal" data-state="next">
-        <div class="road-head">
-          <span class="pill pill-next">Queued</span>
-          <h3>The stage, finished</h3>
-          <span class="road-when">Soon</span>
-        </div>
-        <p>The player window got the full TUI treatment; the fullscreen stage and the
-          mini-player have not. Same box-drawing chrome, same restraint — and fresh captures
-          at the quality the shaders actually deserve.</p>
-      </div>
-
-      <div class="road-row reveal" data-state="next">
-        <div class="road-head">
-          <span class="pill pill-next">Queued</span>
-          <h3>Runs on a machine that isn't mine</h3>
-          <span class="road-when">Soon</span>
-        </div>
-        <p>Multi-monitor placement, theme coverage beyond the 29 already handled, and the
-          rough edges that only show up on hardware I do not own. Issues welcome once the
-          source is up.</p>
-      </div>
-
       <div class="road-row reveal" data-state="done">
         <div class="road-head">
           <span class="pill pill-done">Shipped</span>
-          <h3>More than one source</h3>
-          <span class="road-when">v0.2</span>
+          <h3>One command to install</h3>
+          <span class="road-when">v0.1</span>
         </div>
-        <p>YouTube arrives as a second provider rather than a second app — by the time it
-          reaches the player it is a URL, so the queue, the equaliser and the visualiser carry
-          on unchanged. The video section adds a screen to the remote, and anime through
-          ani-cli behind the same rows.</p>
+        <p>It checks what is there, offers to install what is not, sets up the daemon, the
+          plugin and the keys, then opens the player. <code>--uninstall</code> puts the machine
+          back the way it was.</p>
+      </div>
+
+      <div class="road-row reveal" data-state="now">
+        <div class="road-head">
+          <span class="pill pill-now">In progress</span>
+          <h3>Runs on a machine that isn't mine</h3>
+          <span class="road-when">Now</span>
+        </div>
+        <p>The install already passes on a simulated fresh Omarchy; next is real hardware I do
+          not own — multi-monitor placement, themes beyond the 29 already handled, and the rough
+          edges only other machines find. Issues welcome.</p>
       </div>
 
       <div class="road-row reveal" data-state="next">
@@ -309,15 +296,16 @@
       <span class="sec-label">05 // GET IT</span>
       <h2 data-scramble>Run It Yourself</h2>
       <div class="prose">
-        <p class="lede">Orpheus is a Quickshell plugin plus a small Python daemon. There is no
-          installer yet — that is the next thing on the list — but the path is short.</p>
-        <p>You need a TIDAL subscription for playback; the hi-res tier needs the PKCE sign-in,
-          which the player walks you through. Nothing is downloaded and nothing is decrypted:
-          it streams, the same as the official client.</p>
+        <p class="lede">One command on an Omarchy machine. It checks what is there, offers to
+          install what is missing, wires up the daemon, the plugin and the keys, then opens the
+          player.</p>
+        <p>TIDAL playback needs a subscription; hi-res needs the PKCE sign-in, which the player
+          walks you through. The video section works without one. Nothing is downloaded and
+          nothing is decrypted: it streams, the same as the official client.</p>
       </div>
       <div class="req">
-        <span>Omarchy / Hyprland</span><span>Quickshell</span><span>Python 3.13+</span>
-        <span>mpv</span><span>uv</span><span>TIDAL account</span>
+        <span>Omarchy / Hyprland</span><span>mpv</span><span>cava</span><span>uv</span>
+        <span>TIDAL account</span><span>yt-dlp — optional</span>
       </div>
       <div class="tier-note">This page profiled your device as <b data-tier-readout>…</b> and
         picked its render resolution to match.</div>
@@ -329,17 +317,9 @@
           <span class="shell-name">bash</span>
           <button class="shell-copy" data-copy="#install-cmd">Copy</button>
         </div>
-        <pre id="install-cmd"><span class="c"># the daemon and its unit</span>
-<span class="p">$</span> git clone https://github.com/GeneralDussDuss/orpheus
-<span class="p">$</span> cd orpheus &amp;&amp; uv sync
-<span class="p">$</span> cp orpheusd.service ~/.config/systemd/user/
-<span class="p">$</span> systemctl --user enable --now orpheusd
+        <pre id="install-cmd"><span class="p">$</span> curl -fsSL https://raw.githubusercontent.com/<wbr>GeneralDussDuss/orpheus/<wbr>main/install.sh | bash
 
-<span class="c"># the shell plugin</span>
-<span class="p">$</span> ln -s "$PWD" ~/.config/omarchy/plugins/orpheus
-<span class="p">$</span> omarchy restart shell
-
-<span class="c"># Super+Shift+M opens the player</span></pre>
+<span class="c"># then Super+Shift+M</span></pre>
       </div>
       <p style="margin-top:1.1rem;"><a class="btn btn-secondary" href="https://github.com/GeneralDussDuss/orpheus#-install" target="_blank" rel="noopener">Full instructions in the README</a></p>
     </div>
@@ -353,8 +333,7 @@
     <span class="sec-label" style="justify-content:center;">06 // THE ASK</span>
     <h2 class="grad" data-scramble>If You Like It, Star It</h2>
     <p class="prose">Orpheus is one person's plugin for one window manager. A star is how I find
-      out anyone else is running it — and it is what decides whether the install path gets built
-      for strangers or stays a note to myself.</p>
+      out anyone else is running it — and it is what decides how much more of it gets built.</p>
     <div class="cta-row">
       <a class="btn btn-primary" href="https://github.com/GeneralDussDuss/orpheus" target="_blank" rel="noopener">
         <span class="star-ico">★</span>Star us now<span class="star-n" data-stars>—</span></a>

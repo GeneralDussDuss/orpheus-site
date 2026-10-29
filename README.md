@@ -47,7 +47,7 @@ tall headless window captures the whole page.
 
 | Page | What's on it |
 |---|---|
-| `index.html` | Prism running live as the hero, what it is, build numbers, the roadmap, and how to install it |
+| `index.html` | Prism running live as the hero, what it is, the video section, the roadmap, and the one-line install |
 | `visualizers.html` | One stage, all five shaders, cycled; the stack in nine sentences |
 
 ## Design
