@@ -266,12 +266,13 @@
       <div class="road-row reveal" data-state="now">
         <div class="road-head">
           <span class="pill pill-now">In progress</span>
-          <h3>Runs on a machine that isn't mine</h3>
+          <h3>Windows, and machines that aren't mine</h3>
           <span class="road-when">Now</span>
         </div>
-        <p>The install already passes on a simulated fresh Omarchy; next is real hardware I do
-          not own — multi-monitor placement, themes beyond the 29 already handled, and the rough
-          edges only other machines find. Issues welcome.</p>
+        <p>The same player and visualizers now run on Windows as a tray app, installed with
+          one PowerShell line and tested on every change. Next is real hardware I do not own —
+          Windows PCs, multi-monitor setups, the rough edges only other machines find. Issues
+          welcome.</p>
       </div>
 
       <div class="road-row reveal" data-state="next">
@@ -296,15 +297,14 @@
       <span class="sec-label">05 // GET IT</span>
       <h2 data-scramble>Run It Yourself</h2>
       <div class="prose">
-        <p class="lede">One command on an Omarchy machine. It checks what is there, offers to
-          install what is missing, wires up the daemon, the plugin and the keys, then opens the
-          player.</p>
+        <p class="lede">One command, on Omarchy or on Windows. It checks what is there,
+          installs what is missing, sets everything up, then opens the player.</p>
         <p>TIDAL playback needs a subscription; hi-res needs the PKCE sign-in, which the player
           walks you through. The video section works without one. Nothing is downloaded and
           nothing is decrypted: it streams, the same as the official client.</p>
       </div>
       <div class="req">
-        <span>Omarchy / Hyprland</span><span>mpv</span><span>cava</span><span>uv</span>
+        <span>Omarchy / Hyprland</span><span>Windows 10 / 11</span>
         <span>TIDAL account</span><span>yt-dlp — optional</span>
       </div>
       <div class="tier-note">This page profiled your device as <b data-tier-readout>…</b> and
@@ -314,12 +314,22 @@
       <div class="shell">
         <div class="shell-bar">
           <span class="dot"></span><span class="dot"></span><span class="dot"></span>
-          <span class="shell-name">bash</span>
-          <button class="shell-copy" data-copy="#install-cmd">Copy</button>
+          <span class="shell-name">linux · terminal</span>
+          <button class="shell-copy" data-copy="#install-linux">Copy</button>
         </div>
-        <pre id="install-cmd"><span class="p">$</span> curl -fsSL https://raw.githubusercontent.com/<wbr>GeneralDussDuss/orpheus/<wbr>main/install.sh | bash
+        <pre id="install-linux"><span class="p">$</span> curl -fsSL https://raw.githubusercontent.com/<wbr>GeneralDussDuss/orpheus/<wbr>main/install.sh | bash
 
 <span class="c"># then Super+Shift+M</span></pre>
+      </div>
+      <div class="shell" style="margin-top:1rem;">
+        <div class="shell-bar">
+          <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+          <span class="shell-name">windows · powershell</span>
+          <button class="shell-copy" data-copy="#install-windows">Copy</button>
+        </div>
+        <pre id="install-windows"><span class="p">&gt;</span> irm https://raw.githubusercontent.com/<wbr>GeneralDussDuss/orpheus/<wbr>main/install.ps1 | iex
+
+<span class="c"># then Orpheus is in the tray and the Start menu</span></pre>
       </div>
       <p style="margin-top:1.1rem;"><a class="btn btn-secondary" href="https://github.com/GeneralDussDuss/orpheus#-install" target="_blank" rel="noopener">Full instructions in the README</a></p>
     </div>
